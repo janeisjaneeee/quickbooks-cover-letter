@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jane Zhu - QuickBooks Marketing Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7f8fa;
+            color: #393a3d;
+            line-height: 1.5;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 240px;
+            background: #2c2d30;
+            color: white;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #2ca01c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-item.active {
+            background: rgba(44,160,28,0.2);
+            border-left-color: #2ca01c;
+        }
+        
+        .nav-item.active::after {
+            content: '✨';
+            position: absolute;
+            right: 20px;
+            animation: sparkle 2s infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 0;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e6e6e6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .breadcrumb {
+            color: #717171;
+            font-size: 14px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #393a3d;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #0077c5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .content-area {
+            padding: 30px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e6e6e6;
+            padding: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #393a3d;
+        }
+        
+        .card-subtitle {
+            font-size: 12px;
+            color: #717171;
+            margin-top: 4px;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2ca01c;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: #717171;
+            margin-bottom: 8px;
+        }
+        
+        .metric-change {
+            font-size: 12px;
+            color: #2ca01c;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ca01c, #40b932);
+            border-radius: 4px;
+            transition: width 2s ease;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .skill-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: #0077c5;
+            transition: all 0.2s;
+        }
+        
+        .skill-item:hover {
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+        
+        .chart-container {
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: linear-gradient(90deg, #2ca01c, #40b932, #2ca01c);
+            border-radius: 2px;
+            animation: pulse 2s infinite;
+        }
+        
+        .chart-points {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+        }
+        
+        .chart-point {
+            width: 8px;
+            height: 8px;
+            background: #2ca01c;
+            border-radius: 50%;
+            animation: bounce 1.5s infinite;
+        }
+        
+        .chart-point:nth-child(2) { animation-delay: 0.3s; }
+        .chart-point:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #0077c5 0%, #005a9c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 8s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .cta-text {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .setup-panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #ffa500;
+        }
+        
+        .setup-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #393a3d;
+            margin-bottom: 15px;
+        }
+        
+        .setup-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .setup-icon {
+            width: 20px;
+            height: 20px;
+            background: #2ca01c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+        
+        .setup-text {
+            flex: 1;
+            color: #717171;
+        }
+        
+        .setup-action {
+            background: #0077c5;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .setup-action:hover {
+            background: #005a9c;
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">QB</div>
+                <div class="logo-text">QuickBooks</div>
+            </div>
+            
+            <div class="nav-item">Dashboard</div>
+            <div class="nav-item">Banking</div>
+            <div class="nav-item active">Jane's Application</div>
+            <div class="nav-item">Customers & leads</div>
+            <div class="nav-item">Cash flow</div>
+            <div class="nav-item">Expenses</div>
+            <div class="nav-item">Projects</div>
+            <div class="nav-item">Reports</div>
+            <div class="nav-item">Taxes</div>
+            <div class="nav-item">Accounting</div>
+            <div class="nav-item">My accountant</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">Marketing Co-op Application</div>
+                    <div class="page-title">Jane Zhu</div>
+                </div>
+                <div class="header-right">
+                    <div class="user-avatar">JZ</div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">IMPACT METRICS</div>
+                                <div class="card-subtitle">Microsoft Program Manager Results</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-label">Copilot Adoption Growth</div>
+                        <div class="metric-value">12%</div>
+                        <div class="metric-change">
+                            ↗ Increase through targeted campaigns
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%;"></div>
+                        </div>
+                        
+                        <div class="metric-label">Universities Reached</div>
+                        <div class="metric-value">40+</div>
+                        <div class="metric-change">
+                            📈 Schools via propensity models
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">CUSTOMER RESEARCH</div>
+                                <div class="card-subtitle">Data-Driven Insights</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-line"></div>
+                            <div class="chart-points">
+                                <div class="chart-point"></div>
+                                <div class="chart-point"></div>
+                                <div class="chart-point"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-label">Focus Groups Coordinated</div>
+                        <div class="metric-value">Student</div>
+                        <div class="metric-change">
+                            🎯 Identified AI adoption barriers
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">TECHNICAL SKILLS</div>
+                                <div class="card-subtitle">Marketing Analytics Ready</div>
+                            </div>
+                        </div>
+                        
+                        <div class="skills-grid">
+                            <div class="skill-item">SQL</div>
+                            <div class="skill-item">Python</div>
+                            <div class="skill-item">Tableau</div>
+                            <div class="skill-item">Google Analytics</div>
+                            <div class="skill-item">Excel/VBA</div>
+                            <div class="skill-item">SEO</div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        
+                        <div class="metric-change">
+                            ⚡ 40% efficiency improvement at CIBC Mellon
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="setup-panel">
+                            <div class="setup-title">WHY QUICKBOOKS? 🚀</div>
+                            
+                            <div class="setup-item">
+                                <div class="setup-icon">✓</div>
+                                <div class="setup-text">Transform customer research into growth</div>
+                                <div class="setup-action">Ready</div>
+                            </div>
+                            
+                            <div class="setup-item">
+                                <div class="setup-icon">✓</div>
+                                <div class="setup-text">Build data-driven marketing strategies</div>
+                                <div class="setup-action">Ready</div>
+                            </div>
+                            
+                            <div class="setup-item">
+                                <div class="setup-icon">✓</div>
+                                <div class="setup-text">Collaborate across teams seamlessly</div>
+                                <div class="setup-action">Ready</div>
+                            </div>
+                            
+                            <div class="setup-item">
+                                <div class="setup-icon">✓</div>
+                                <div class="setup-text">Heart beating fast for fintech innovation</div>
+                                <div class="setup-action">Let's Go!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cta-section">
+                    <div class="cta-content">
+                        <div class="cta-title">Ready to Drive QuickBooks Marketing Success</div>
+                        <div class="cta-text">
+                            From Microsoft AI products to QuickBooks small business solutions - let's make marketing magic happen! 🎯
+                        </div>
+                        <div class="contact-info">
+                            <div>📧 j24zhu@uwaterloo.ca</div>
+                            <div>📱 +1 (647) 870-0503</div>
+                            <div>📍 Toronto, ON</div>
+                            <div>🎓 Available 8-month co-op</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
